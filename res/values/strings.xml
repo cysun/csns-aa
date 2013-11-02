@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">CSNS</string>
+    <string name="action_settings">Settings</string>
+    <string name="img_banner">CSNS Banner Image</string>
+    <string name="input_hint_username">Username</string>
+    <string name="input_hint_password">Password</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_nologin">Continue Without Login</string>
+
+</resources>
