@@ -1,61 +1,126 @@
 package edu.csula.csns;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import android.util.Log;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import edu.csula.csns.model.Department;
+import edu.csula.csns.model.News;
+import edu.csula.csns.model.User;
 
 public class WebServiceClient {
 
-    private static final String baseUrl = "http://10.0.2.2:8080/csns2/service";
+    private static final String baseUrl = "http://csns.calstatela.edu/service";
 
-    private static final ObjectMapper mapper = new ObjectMapper();
-
-    private static WebServiceClient wsClient;
-
-    private WebServiceClient()
+    public static HttpURLConnection getConnection( String url )
+        throws IOException
     {
+        HttpURLConnection connection = (HttpURLConnection) (new URL( url )).openConnection();
+        connection.setConnectTimeout( 10000 );
+        connection.setReadTimeout( 10000 );
+        return connection;
     }
 
-    public static WebServiceClient getInstance()
+    public static HttpURLConnection getConnection( String url,
+        Map<String, String> params ) throws IOException
     {
-        if( wsClient == null ) wsClient = new WebServiceClient();
+        StringBuffer sb = new StringBuffer( url );
 
-        return wsClient;
+        boolean isFirst = true;
+        for( String key : params.keySet() )
+        {
+            if( isFirst )
+            {
+                sb.append( "?" );
+                isFirst = false;
+            }
+            else
+                sb.append( "&" );
+
+            sb.append( URLEncoder.encode( key, "UTF-8" ) )
+                .append( "=" )
+                .append( URLEncoder.encode( params.get( key ), "UTF-8" ) );
+        }
+
+        return getConnection( sb.toString() );
     }
 
-    public List<Department> getDepartments()
+    public static User login( String username, String password )
     {
-        List<Department> departments = null;
-        HttpURLConnection urlConnection = null;
+        String url = baseUrl + "/user/login";
 
+        User user = null;
+        HttpURLConnection connection = null;
         try
         {
-            URL url = new URL( baseUrl + "/department/list" );
-            urlConnection = (HttpURLConnection) url.openConnection();
-            Map<String, List<Department>> result = mapper.readValue(
-                urlConnection.getInputStream(),
-                new TypeReference<Map<String, List<Department>>>() {
-                } );
-            departments = result.get( "departments" );
+            Map<String, String> params = new HashMap<String, String>();
+            params.put( "username", username );
+            params.put( "password", password );
+            connection = getConnection( url, params );
+            user = JsonUtils.readUser( connection.getInputStream() );
         }
-        catch( Exception e )
+        catch( IOException e )
         {
-            Log.w( "WebServiceClient", e );
+            Log.e( "WebServiceClient", "login(String,String) error.", e );
         }
         finally
         {
-            if( urlConnection != null ) urlConnection.disconnect();
+            if( connection != null ) connection.disconnect();
+        }
+
+        return user;
+    }
+
+    public static List<Department> getDepartments()
+    {
+        String url = baseUrl + "/department/list";
+
+        List<Department> departments = null;
+        HttpURLConnection connection = null;
+        try
+        {
+            connection = getConnection( url );
+            departments = JsonUtils.readDepartments( connection.getInputStream() );
+        }
+        catch( IOException e )
+        {
+            Log.e( "WebServiceClient", "getDepartments() error.", e );
+        }
+        finally
+        {
+            if( connection != null ) connection.disconnect();
         }
 
         return departments;
+    }
+
+    public static List<News> getNewses( String dept )
+    {
+        String url = baseUrl + "/news/" + dept;
+
+        List<News> newses = null;
+        HttpURLConnection connection = null;
+        try
+        {
+            connection = getConnection( url );
+            newses = JsonUtils.readNewses( connection.getInputStream() );
+        }
+        catch( IOException e )
+        {
+            Log.e( "WebServiceClient", "getNewses(String) error.", e );
+        }
+        finally
+        {
+            if( connection != null ) connection.disconnect();
+        }
+
+        return newses;
     }
 
 }

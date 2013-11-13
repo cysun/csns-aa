@@ -2,37 +2,18 @@ package edu.csula.csns.model;
 
 import java.io.Serializable;
 
-import android.content.SharedPreferences;
-
 public class Department implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long id;
+    long id;
 
-    private String name;
+    String name;
+
+    String abbreviation;
 
     public Department()
     {
-    }
-
-    public static Department fromPreferences( SharedPreferences preferences )
-    {
-        if( preferences.getLong( "department.id", -1 ) < 0 ) return null;
-
-        Department department = new Department();
-        department.id = preferences.getLong( "department.id", -1 );
-        department.name = preferences.getString( "department.name", "" );
-
-        return department;
-    }
-
-    public void toPreferences( SharedPreferences preferences )
-    {
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putLong( "department.id", id );
-        editor.putString( "department.name", name );
-        editor.commit();
     }
 
     @Override
@@ -41,12 +22,12 @@ public class Department implements Serializable {
         return name;
     }
 
-    public Long getId()
+    public long getId()
     {
         return id;
     }
 
-    public void setId( Long id )
+    public void setId( long id )
     {
         this.id = id;
     }
@@ -59,6 +40,16 @@ public class Department implements Serializable {
     public void setName( String name )
     {
         this.name = name;
+    }
+
+    public String getAbbreviation()
+    {
+        return abbreviation;
+    }
+
+    public void setAbbreviation( String abbreviation )
+    {
+        this.abbreviation = abbreviation;
     }
 
 }

@@ -9,5 +9,7 @@
     <string name="btn_login">Login</string>
     <string name="btn_nologin">Continue Without Login</string>
     <string name="btn_continue">Continue</string>
+    <string name="title_news_list">News</string>
+    <string name="title_news_detail">News</string>
 
 </resources>
