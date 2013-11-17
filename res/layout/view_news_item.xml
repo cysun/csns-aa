@@ -2,36 +2,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/list_selector"
     android:orientation="vertical"
-    tools:context=".NewsDetailFragment" >
+    android:paddingBottom="5dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="5dp" >
 
     <TextView
         android:id="@+id/tview_news_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="5dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="5dp"
-        android:textColor="#9c6e15"
-        android:textSize="17sp"
+        android:textColor="#040404"
+        android:textSize="15sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tview_news_subtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="5dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+        android:layout_marginTop="2dp"
         android:textColor="#777777"
         android:textSize="12sp" />
-
-    <WebView
-        android:id="@+id/wview_news_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp"
-        android:textIsSelectable="true" />
 
 </LinearLayout>

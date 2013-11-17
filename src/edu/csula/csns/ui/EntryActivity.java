@@ -24,7 +24,7 @@ import android.widget.Spinner;
 
 public class EntryActivity extends Activity {
 
-    private Spinner selectDepartment;
+    private Spinner spinnerDepartment;
 
     private EditText inputUsername, inputPassword;
 
@@ -45,19 +45,19 @@ public class EntryActivity extends Activity {
             return;
         }
 
-        selectDepartment = (Spinner) findViewById( R.id.selectDepartment );
+        spinnerDepartment = (Spinner) findViewById( R.id.spinner_department );
         if( department != null )
         {
             Log.d( "MainActivity", "From prefs: " + department.getName() );
-            selectDepartment.setVisibility( View.INVISIBLE );
+            spinnerDepartment.setVisibility( View.INVISIBLE );
         }
         else
             (new GetDepartmentsTask()).execute();
 
-        inputUsername = (EditText) findViewById( R.id.inputUsername );
-        inputPassword = (EditText) findViewById( R.id.inputPassword );
-        btnLogin = (Button) findViewById( R.id.btnLogin );
-        btnNologin = (Button) findViewById( R.id.btnNologin );
+        inputUsername = (EditText) findViewById( R.id.input_username );
+        inputPassword = (EditText) findViewById( R.id.input_password );
+        btnLogin = (Button) findViewById( R.id.btn_login );
+        btnNologin = (Button) findViewById( R.id.btn_nologin );
 
         View.OnClickListener btnClickListener = new BtnClickListener();
         btnLogin.setOnClickListener( btnClickListener );
@@ -109,7 +109,7 @@ public class EntryActivity extends Activity {
         @Override
         protected void onPostExecute( List<Department> departments )
         {
-            selectDepartment.setAdapter( new ArrayAdapter<Department>(
+            spinnerDepartment.setAdapter( new ArrayAdapter<Department>(
                 EntryActivity.this,
                 android.R.layout.simple_spinner_dropdown_item, departments ) );
             progressDialog.dismiss();
@@ -146,11 +146,11 @@ public class EntryActivity extends Activity {
         @Override
         public void onClick( View v )
         {
-            if( selectDepartment.getVisibility() != View.INVISIBLE )
+            if( spinnerDepartment.getVisibility() != View.INVISIBLE )
                 DepartmentData.getInstance( EntryActivity.this ).setDepartment(
-                    (Department) selectDepartment.getSelectedItem() );
+                    (Department) spinnerDepartment.getSelectedItem() );
 
-            if( v.getId() == R.id.btnLogin )
+            if( v.getId() == R.id.btn_login )
             {
                 (new LoginTask()).execute( inputUsername.getText().toString(),
                     inputPassword.getText().toString() );

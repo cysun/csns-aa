@@ -7,11 +7,11 @@ import android.app.ListFragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import edu.csula.csns.model.News;
 import edu.csula.csns.model.NewsData;
+import edu.csula.csns.ui.adapter.NewsListAdapter;
 
 public class NewsListFragment extends ListFragment {
 
@@ -50,9 +50,7 @@ public class NewsListFragment extends ListFragment {
             {
                 List<News> newses = NewsData.getInstance( getActivity() )
                     .getNewses();
-                setListAdapter( new ArrayAdapter<News>( getActivity(),
-                    android.R.layout.simple_list_item_activated_1,
-                    android.R.id.text1, newses ) );
+                setListAdapter( new NewsListAdapter( getActivity(), newses ) );
             }
         }
     }

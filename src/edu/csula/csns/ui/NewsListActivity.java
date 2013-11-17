@@ -1,12 +1,12 @@
 package edu.csula.csns.ui;
 
 import edu.csula.csns.R;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.widget.ListView;
 
-public class NewsListActivity extends Activity implements
+public class NewsListActivity extends FragmentActivity implements
     NewsListFragment.Callbacks {
 
     private boolean isTwoPane;
@@ -21,7 +21,7 @@ public class NewsListActivity extends Activity implements
         {
             isTwoPane = true;
             ((NewsListFragment) getFragmentManager().findFragmentById(
-                R.id.news_list )).getListView().setChoiceMode(
+                R.id.fragment_news_list )).getListView().setChoiceMode(
                 ListView.CHOICE_MODE_SINGLE );
         }
     }
@@ -35,7 +35,7 @@ public class NewsListActivity extends Activity implements
             arguments.putInt( "newsIndex", newsIndex );
             NewsDetailFragment fragment = new NewsDetailFragment();
             fragment.setArguments( arguments );
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                 .replace( R.id.news_detail_container, fragment )
                 .commit();
         }

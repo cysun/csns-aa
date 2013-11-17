@@ -25,11 +25,11 @@
         </activity>
         <activity
             android:name="edu.csula.csns.ui.NewsListActivity"
-            android:label="@string/title_news_list" >
+            android:label="@string/news_list_title" >
         </activity>
         <activity
             android:name="edu.csula.csns.ui.NewsDetailActivity"
-            android:label="@string/title_news_detail"
+            android:label="@string/news_detail_title"
             android:parentActivityName="edu.csula.csns.ui.NewsListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
