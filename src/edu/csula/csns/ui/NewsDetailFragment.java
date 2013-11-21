@@ -50,7 +50,8 @@ public class NewsDetailFragment extends Fragment {
                 + DateFormat.getDateInstance().format( news.getPublishDate() ) );
 
             WebView content = (WebView) view.findViewById( R.id.wview_news_content );
-            content.loadData( news.getContent(), "text/html", "UTF-8" );
+            content.loadDataWithBaseURL( "file:///android_asset/",
+                news.getContent(), "text/html", "UTF-8", null );
         }
 
         return view;

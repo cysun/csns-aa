@@ -16,7 +16,8 @@ import edu.csula.csns.model.User;
 
 public class WebServiceClient {
 
-    private static final String baseUrl = "http://csns.calstatela.edu/service";
+//  private static final String BASE_URL = "http://csns.calstatela.edu/service";
+    private static final String BASE_URL = "http://10.0.2.2:8080/csns2/service";
 
     public static HttpURLConnection getConnection( String url )
         throws IOException
@@ -53,7 +54,7 @@ public class WebServiceClient {
 
     public static User login( String username, String password )
     {
-        String url = baseUrl + "/user/login";
+        String url = BASE_URL + "/user/login";
 
         User user = null;
         HttpURLConnection connection = null;
@@ -79,7 +80,7 @@ public class WebServiceClient {
 
     public static List<Department> getDepartments()
     {
-        String url = baseUrl + "/department/list";
+        String url = BASE_URL + "/department/list";
 
         List<Department> departments = null;
         HttpURLConnection connection = null;
@@ -102,7 +103,7 @@ public class WebServiceClient {
 
     public static List<News> getNewses( String dept )
     {
-        String url = baseUrl + "/news/" + dept;
+        String url = BASE_URL + "/news/" + dept;
 
         List<News> newses = null;
         HttpURLConnection connection = null;

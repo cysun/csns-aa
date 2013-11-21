@@ -1,0 +1,9 @@
+.news-attachments {
+    border: 1px solid #DDDDDD;
+    background-color:#FFEFD5;
+    padding:10px;
+}
+.news-attachments ul {
+    margin: 10px 0px 5px 25px;
+    padding: 0;
+}
