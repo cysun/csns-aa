@@ -3,9 +3,9 @@ package edu.csula.csns.ui;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.ListFragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
 
@@ -78,6 +78,8 @@ public class NewsListFragment extends ListFragment {
     {
         super.onViewCreated( view, savedInstanceState );
 
+        getListView().setChoiceMode( ListView.CHOICE_MODE_SINGLE );
+
         if( savedInstanceState != null
             && savedInstanceState.containsKey( STATE_ACTIVATED_POSITION ) )
         {
@@ -104,11 +106,18 @@ public class NewsListFragment extends ListFragment {
 
     public interface Callbacks {
 
+        public void onDataLoaded();
+
         public void onItemSelected( int newsIndex );
 
     }
 
     private static Callbacks dummyCallbacks = new Callbacks() {
+
+        @Override
+        public void onDataLoaded()
+        {
+        }
 
         @Override
         public void onItemSelected( int newsIndex )

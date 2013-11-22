@@ -51,7 +51,7 @@ public class NewsListAdapter extends BaseAdapter {
         {
             LayoutInflater inflater;
             inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-            view = inflater.inflate( R.layout.view_news_item, null );
+            view = inflater.inflate( R.layout.view_news_list_item, null );
         }
 
         News news = newses.get( position );

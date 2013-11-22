@@ -1,19 +1,16 @@
 package edu.csula.csns.ui;
 
 import edu.csula.csns.R;
-import edu.csula.csns.model.NewsData;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
-import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 
 public class NewsDetailActivity extends FragmentActivity {
 
-    private ViewPager viewPager;
+    private NewsPagerFragment pagerFragment;
 
     @Override
     protected void onCreate( Bundle savedInstanceState )
@@ -23,26 +20,22 @@ public class NewsDetailActivity extends FragmentActivity {
 
         getActionBar().setDisplayHomeAsUpEnabled( true );
 
-        viewPager = (ViewPager) findViewById( R.id.pager_news_detail );
-        viewPager.setAdapter( new FragmentStatePagerAdapter(
-            getSupportFragmentManager() ) {
+        FragmentManager fm = getSupportFragmentManager();
+        pagerFragment = (NewsPagerFragment) fm.findFragmentById( R.id.container1_news_detail );
 
-            @Override
-            public int getCount()
-            {
-                return NewsData.getInstance( NewsDetailActivity.this )
-                    .getNewses()
-                    .size();
-            }
+        if( pagerFragment == null )
+        {
+            pagerFragment = new NewsPagerFragment();
 
-            @Override
-            public Fragment getItem( int pos )
-            {
-                return createFragment( pos );
-            }
-        } );
+            Bundle arguments = new Bundle();
+            arguments.putInt( "newsIndex",
+                getIntent().getIntExtra( "newsIndex", 0 ) );
+            pagerFragment.setArguments( arguments );
 
-        viewPager.setCurrentItem( getIntent().getIntExtra( "newsIndex", 0 ) );
+            fm.beginTransaction()
+                .add( R.id.container1_news_detail, pagerFragment )
+                .commit();
+        }
     }
 
     @Override
@@ -56,15 +49,6 @@ public class NewsDetailActivity extends FragmentActivity {
                 return true;
         }
         return super.onOptionsItemSelected( item );
-    }
-
-    private Fragment createFragment( int newsIndex )
-    {
-        Bundle arguments = new Bundle();
-        arguments.putInt( "newsIndex", newsIndex );
-        NewsDetailFragment fragment = new NewsDetailFragment();
-        fragment.setArguments( arguments );
-        return fragment;
     }
 
 }

@@ -4,12 +4,14 @@ import edu.csula.csns.R;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.widget.ListView;
+import android.support.v4.app.FragmentManager;
 
 public class NewsListActivity extends FragmentActivity implements
     NewsListFragment.Callbacks {
 
     private boolean isTwoPane;
+
+    private NewsPagerFragment pagerFragment;
 
     @Override
     protected void onCreate( Bundle savedInstanceState )
@@ -17,28 +19,33 @@ public class NewsListActivity extends FragmentActivity implements
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_news_list );
 
-        if( findViewById( R.id.news_detail_container ) != null )
+        if( findViewById( R.id.container2_news_detail ) != null )
         {
             isTwoPane = true;
-            ((NewsListFragment) getFragmentManager().findFragmentById(
-                R.id.fragment_news_list )).getListView().setChoiceMode(
-                ListView.CHOICE_MODE_SINGLE );
+
+            FragmentManager fm = getSupportFragmentManager();
+            pagerFragment = (NewsPagerFragment) fm.findFragmentById( R.id.container2_news_detail );
+            if( pagerFragment == null )
+            {
+                pagerFragment = new NewsPagerFragment();
+                fm.beginTransaction()
+                    .add( R.id.container2_news_detail, pagerFragment )
+                    .commit();
+            }
         }
+    }
+
+    @Override
+    public void onDataLoaded()
+    {
+        pagerFragment.getViewPager().getAdapter().notifyDataSetChanged();
     }
 
     @Override
     public void onItemSelected( int newsIndex )
     {
         if( isTwoPane )
-        {
-            Bundle arguments = new Bundle();
-            arguments.putInt( "newsIndex", newsIndex );
-            NewsDetailFragment fragment = new NewsDetailFragment();
-            fragment.setArguments( arguments );
-            getSupportFragmentManager().beginTransaction()
-                .replace( R.id.news_detail_container, fragment )
-                .commit();
-        }
+            pagerFragment.getViewPager().setCurrentItem( newsIndex );
         else
         {
             Intent intent = new Intent( this, NewsDetailActivity.class );

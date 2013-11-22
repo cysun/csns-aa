@@ -26,9 +26,10 @@ public class NewsData {
     {
         this.context = context;
         fromPreferences();
+        update();
     }
 
-    public static NewsData getInstance( Context context )
+    public static synchronized NewsData getInstance( Context context )
     {
         if( newsData == null ) newsData = new NewsData( context );
         return newsData;

@@ -19,7 +19,7 @@
         tools:layout="@android:layout/list_content" />
 
     <FrameLayout
-        android:id="@+id/container_news_detail"
+        android:id="@+id/container2_news_detail"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="3" />

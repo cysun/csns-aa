@@ -26,7 +26,7 @@ public class News implements Serializable {
         return title;
     }
 
-    public String getContent()
+    public String getContentWithAttachments()
     {
         StringBuffer sb = new StringBuffer(
             "<link rel='stylesheet' href='css/style.css'>" );
@@ -66,6 +66,11 @@ public class News implements Serializable {
     public void setTitle( String title )
     {
         this.title = title;
+    }
+
+    public String getContent()
+    {
+        return content;
     }
 
     public void setContent( String content )

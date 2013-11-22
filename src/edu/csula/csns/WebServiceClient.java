@@ -16,7 +16,7 @@ import edu.csula.csns.model.User;
 
 public class WebServiceClient {
 
-//  private static final String BASE_URL = "http://csns.calstatela.edu/service";
+//    private static final String BASE_URL = "http://csns.calstatela.edu/service";
     private static final String BASE_URL = "http://10.0.2.2:8080/csns2/service";
 
     public static HttpURLConnection getConnection( String url )

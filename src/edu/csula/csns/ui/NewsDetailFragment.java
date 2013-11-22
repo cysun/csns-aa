@@ -51,7 +51,7 @@ public class NewsDetailFragment extends Fragment {
 
             WebView content = (WebView) view.findViewById( R.id.wview_news_content );
             content.loadDataWithBaseURL( "file:///android_asset/",
-                news.getContent(), "text/html", "UTF-8", null );
+                news.getContentWithAttachments(), "text/html", "UTF-8", null );
         }
 
         return view;
