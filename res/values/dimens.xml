@@ -4,4 +4,10 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <!-- News -->
+    <dimen name="news_list_title_textsize">16sp</dimen>
+    <dimen name="news_list_subtitle_textsize">12sp</dimen>
+    <dimen name="news_details_title_textsize">17sp</dimen>
+    <dimen name="news_details_subtitle_textsize">12sp</dimen>
+
 </resources>
