@@ -35,24 +35,69 @@ public class NewsListFragment extends ListFragment {
 
     private Callbacks callbacks = dummyCallbacks;
 
+    private int activatedPosition = ListView.INVALID_POSITION;
+
     public NewsListFragment()
     {
     }
 
     @Override
-    public void onCreate( Bundle savedInstanceState )
+    public void onAttach( Activity activity )
     {
-        super.onCreate( savedInstanceState );
+        super.onAttach( activity );
+
+        if( !(activity instanceof Callbacks) )
+        {
+            throw new IllegalStateException(
+                "Activity must implement fragment's callbacks." );
+        }
+
+        callbacks = (Callbacks) activity;
+    }
+
+    /*
+     * In the getNewsTask we need to access both the parent activity and the
+     * ListView, so the proper place to do that is in onAcitivityCreated(),
+     * which is called after onCreate() and onCreateView().
+     */
+    @Override
+    public void onActivityCreated( Bundle savedInstanceState )
+    {
+        super.onActivityCreated( savedInstanceState );
+
+        if( savedInstanceState != null
+            && savedInstanceState.containsKey( "activatedPosition" ) )
+            activatedPosition = savedInstanceState.getInt( "activatedPosition" );
+
         (new GetNewsTask()).execute();
+    }
+
+    /*
+     * ListView automatically saves/restored the selected position, but not the
+     * activated position ("selected" and "activated" are different), so we have
+     * to it ourselves.
+     */
+    @Override
+    public void onSaveInstanceState( Bundle outState )
+    {
+        super.onSaveInstanceState( outState );
+
+        activatedPosition = getListView().getCheckedItemPosition();
+        if( activatedPosition != ListView.INVALID_POSITION )
+            outState.putInt( "activatedPosition", activatedPosition );
+    }
+
+    @Override
+    public void onDetach()
+    {
+        super.onDetach();
+        callbacks = dummyCallbacks;
     }
 
     @Override
     public void onListItemClick( ListView listView, View view, int position,
         long id )
     {
-        // background selector can check for android:state_selected
-        view.setSelected( true );
-
         callbacks.onItemSelected( position );
     }
 
@@ -72,50 +117,19 @@ public class NewsListFragment extends ListFragment {
                 List<News> newses = NewsData.getInstance( getActivity() )
                     .getNewses();
                 setListAdapter( new NewsListAdapter( getActivity(), newses ) );
+
+                if( callbacks.isTwoPane() )
+                {
+                    getListView().setChoiceMode( ListView.CHOICE_MODE_SINGLE );
+
+                    if( activatedPosition == ListView.INVALID_POSITION
+                        && newses != null && newses.size() > 0 )
+                        activatedPosition = 0;
+
+                    getListView().setItemChecked( activatedPosition, true );
+                }
             }
         }
-    }
-
-    /*
-     * Save and restore activated position. This is only useful in the two-pane
-     * mode when both the list view and the details view are shown.
-     */
-
-    private static final String STATE_ACTIVATED_POSITION = "activated_position";
-
-    private int activatedPosition = ListView.INVALID_POSITION;
-
-    @Override
-    public void onSaveInstanceState( Bundle outState )
-    {
-        super.onSaveInstanceState( outState );
-
-        if( activatedPosition != ListView.INVALID_POSITION )
-            outState.putInt( STATE_ACTIVATED_POSITION, activatedPosition );
-    }
-
-    @Override
-    public void onViewCreated( View view, Bundle savedInstanceState )
-    {
-        super.onViewCreated( view, savedInstanceState );
-
-        getListView().setChoiceMode( ListView.CHOICE_MODE_SINGLE );
-
-        if( savedInstanceState != null
-            && savedInstanceState.containsKey( STATE_ACTIVATED_POSITION ) )
-        {
-            setActivatedPosition( savedInstanceState.getInt( STATE_ACTIVATED_POSITION ) );
-        }
-    }
-
-    private void setActivatedPosition( int position )
-    {
-        if( position == ListView.INVALID_POSITION )
-            getListView().setItemChecked( activatedPosition, false );
-        else
-            getListView().setItemChecked( position, true );
-
-        activatedPosition = position;
     }
 
     /*
@@ -131,6 +145,8 @@ public class NewsListFragment extends ListFragment {
 
         public void onItemSelected( int newsIndex );
 
+        public boolean isTwoPane();
+
     }
 
     private static Callbacks dummyCallbacks = new Callbacks() {
@@ -144,27 +160,13 @@ public class NewsListFragment extends ListFragment {
         public void onItemSelected( int newsIndex )
         {
         }
-    };
 
-    @Override
-    public void onAttach( Activity activity )
-    {
-        super.onAttach( activity );
-
-        if( !(activity instanceof Callbacks) )
+        @Override
+        public boolean isTwoPane()
         {
-            throw new IllegalStateException(
-                "Activity must implement fragment's callbacks." );
+            return false;
         }
 
-        callbacks = (Callbacks) activity;
-    }
-
-    @Override
-    public void onDetach()
-    {
-        super.onDetach();
-        callbacks = dummyCallbacks;
-    }
+    };
 
 }

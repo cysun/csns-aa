@@ -23,6 +23,7 @@ import edu.csula.csns.ui.adapter.NewsPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,13 @@ public class NewsPagerFragment extends Fragment {
         if( getArguments() != null )
             newsIndex = getArguments().getInt( "newsIndex", 0 );
         viewPager.setCurrentItem( newsIndex );
+
+        if( getActivity() instanceof OnPageChangeListener )
+        {
+            OnPageChangeListener onPageChangeListener = (OnPageChangeListener) getActivity();
+            viewPager.setOnPageChangeListener( onPageChangeListener );
+            onPageChangeListener.onPageSelected( newsIndex );
+        }
 
         return view;
     }

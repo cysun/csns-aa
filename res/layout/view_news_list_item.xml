@@ -1,4 +1,4 @@
-<!-- 
+<!--
  * This file is part of the CSNetwork Services Android App (CSNS-AA) project.
  * 
  * Copyright 2013, Chengyu Sun (csun@calstatela.edu).
@@ -20,6 +20,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:attr/activatedBackgroundIndicator"
     android:orientation="vertical"
     android:paddingBottom="5dp"
     android:paddingLeft="10dp"

@@ -23,11 +23,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 
 public class NewsListActivity extends FragmentActivity implements
-    NewsListFragment.Callbacks {
+    NewsListFragment.Callbacks, ViewPager.OnPageChangeListener {
 
-    private boolean isTwoPane;
+    private boolean isTwoPane = false;
+
+    private NewsListFragment listFragment;
 
     private NewsPagerFragment pagerFragment;
 
@@ -42,6 +45,7 @@ public class NewsListActivity extends FragmentActivity implements
             isTwoPane = true;
 
             FragmentManager fm = getSupportFragmentManager();
+            listFragment = (NewsListFragment) fm.findFragmentById( R.id.fragment_news_list );
             pagerFragment = (NewsPagerFragment) fm.findFragmentById( R.id.container2_news_detail );
             if( pagerFragment == null )
             {
@@ -53,6 +57,8 @@ public class NewsListActivity extends FragmentActivity implements
         }
     }
 
+    /* NewsListFragment.Callbacks */
+
     @Override
     public void onDataLoaded()
     {
@@ -63,13 +69,40 @@ public class NewsListActivity extends FragmentActivity implements
     public void onItemSelected( int newsIndex )
     {
         if( isTwoPane )
+        {
             pagerFragment.getViewPager().setCurrentItem( newsIndex, false );
+        }
         else
         {
             Intent intent = new Intent( this, NewsDetailActivity.class );
             intent.putExtra( "newsIndex", newsIndex );
             startActivity( intent );
         }
+    }
+
+    @Override
+    public boolean isTwoPane()
+    {
+        return isTwoPane;
+    }
+
+    /* ViewPager.OnPageChangeListener */
+
+    @Override
+    public void onPageScrollStateChanged( int state )
+    {
+    }
+
+    @Override
+    public void onPageScrolled( int position, float positionOffset,
+        int positionOffsetPixels )
+    {
+    }
+
+    @Override
+    public void onPageSelected( int position )
+    {
+        listFragment.getListView().setItemChecked( position, true );
     }
 
 }

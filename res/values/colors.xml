@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- holo_blue_light with less opacity -->
+    <color name="activated_background">#9933b5e5</color>
+
+</resources>
