@@ -2,6 +2,6 @@
 <resources>
 
     <!-- holo_blue_light with less opacity -->
-    <color name="activated_background">#9933b5e5</color>
+    <color name="activated_background">#aa33b5e5</color>
 
 </resources>
