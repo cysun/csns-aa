@@ -1,2 +1,4 @@
-. Force update menu item.
-. Fixed crash after failed login.
+. Menu items
+  - force news update
+  - login/logout
+. Color change after device rotation

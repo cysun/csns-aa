@@ -31,7 +31,9 @@ public class DepartmentData {
 
     private DepartmentData( Context context )
     {
-        this.context = context;
+        // It's important that we use application context because other
+        // contexts (e.g. activities) may be destroyed by the system.
+        this.context = context.getApplicationContext();
         fromPreferences();
     }
 

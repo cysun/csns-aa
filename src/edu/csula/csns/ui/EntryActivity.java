@@ -39,6 +39,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class EntryActivity extends Activity {
 
@@ -48,15 +49,19 @@ public class EntryActivity extends Activity {
 
     private Button btnLogin, btnNologin;
 
+    private ProgressDialog progressDialog;
+
+    private GetDepartmentsTask getDepartmentsTask;
+
     @Override
     protected void onCreate( Bundle savedInstanceState )
     {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_entry );
 
-        Department department = DepartmentData.getInstance( this )
-            .getDepartment();
-        User user = UserData.getInstance( this ).getUser();
+        Department department = DepartmentData.getInstance(
+            getApplicationContext() ).getDepartment();
+        User user = UserData.getInstance( getApplicationContext() ).getUser();
         if( department != null && user != null )
         {
             startDefaultActivity();
@@ -70,7 +75,10 @@ public class EntryActivity extends Activity {
             spinnerDepartment.setVisibility( View.INVISIBLE );
         }
         else
-            (new GetDepartmentsTask()).execute();
+        {
+            getDepartmentsTask = new GetDepartmentsTask();
+            getDepartmentsTask.execute();
+        }
 
         inputUsername = (EditText) findViewById( R.id.input_username );
         inputPassword = (EditText) findViewById( R.id.input_password );
@@ -93,8 +101,23 @@ public class EntryActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu( Menu menu )
     {
+        super.onCreateOptionsMenu( menu );
         getMenuInflater().inflate( R.menu.main, menu );
         return true;
+    }
+
+    /**
+     * Terminates the GetDepartmentsTask if the activity is destroyed (e.g. due
+     * to device rotation). The LoginTask is OK as it doesn't rely on the
+     * activity.
+     */
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        if( progressDialog != null ) progressDialog.dismiss();
+        if( getDepartmentsTask != null ) getDepartmentsTask.cancel( true );
     }
 
     private void startDefaultActivity()
@@ -108,8 +131,6 @@ public class EntryActivity extends Activity {
 
     private class GetDepartmentsTask extends
         AsyncTask<Void, Void, List<Department>> {
-
-        ProgressDialog progressDialog;
 
         @Override
         protected void onPreExecute()
@@ -136,15 +157,6 @@ public class EntryActivity extends Activity {
 
     private class LoginTask extends AsyncTask<String, Void, User> {
 
-        ProgressDialog progressDialog;
-
-        @Override
-        protected void onPreExecute()
-        {
-            progressDialog = WidgetUtils.getDefaultProgressDialog( EntryActivity.this );
-            progressDialog.show();
-        }
-
         @Override
         protected User doInBackground( String... params )
         {
@@ -154,8 +166,15 @@ public class EntryActivity extends Activity {
         @Override
         protected void onPostExecute( User user )
         {
-            UserData.getInstance( EntryActivity.this ).setUser( user );
-            progressDialog.dismiss();
+            String msg = getResources().getString( R.string.toast_login_failure );
+            if( user != null )
+            {
+                UserData.getInstance( getApplicationContext() ).setUser( user );
+                msg = getResources().getString( R.string.toast_login_success );
+            }
+
+            Toast.makeText( getApplicationContext(), msg, Toast.LENGTH_SHORT )
+                .show();
         }
     }
 
@@ -165,8 +184,9 @@ public class EntryActivity extends Activity {
         public void onClick( View v )
         {
             if( spinnerDepartment.getVisibility() != View.INVISIBLE )
-                DepartmentData.getInstance( EntryActivity.this ).setDepartment(
-                    (Department) spinnerDepartment.getSelectedItem() );
+                DepartmentData.getInstance( getApplicationContext() )
+                    .setDepartment(
+                        (Department) spinnerDepartment.getSelectedItem() );
 
             if( v.getId() == R.id.btn_login )
             {

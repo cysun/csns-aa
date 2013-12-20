@@ -34,6 +34,12 @@ public class User implements Serializable {
     {
     }
 
+    @Override
+    public String toString()
+    {
+        return firstName + " " + lastName + ", " + username + ", " + accessKey;
+    }
+
     public String getAccessKey()
     {
         return accessKey;

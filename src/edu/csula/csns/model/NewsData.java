@@ -42,7 +42,7 @@ public class NewsData {
 
     private NewsData( Context context )
     {
-        this.context = context;
+        this.context = context.getApplicationContext();
         fromPreferences();
         update();
     }

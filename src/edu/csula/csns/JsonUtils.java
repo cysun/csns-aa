@@ -46,7 +46,7 @@ public class JsonUtils {
                 } );
             user = result.get( "user" );
 
-            Log.d( "JsonUtils", "User: " + user.getUsername() );
+            Log.d( "JsonUtils", "User: " + user );
         }
         catch( Exception e )
         {

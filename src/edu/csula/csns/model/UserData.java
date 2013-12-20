@@ -31,7 +31,7 @@ public class UserData {
 
     private UserData( Context context )
     {
-        this.context = context;
+        this.context = context.getApplicationContext();
         fromPreferences();
     }
 
