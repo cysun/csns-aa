@@ -52,6 +52,19 @@ public class UserData {
         if( user != null ) toPreferences();
     }
 
+    public void clear()
+    {
+        user = null;
+
+        SharedPreferences.Editor editor = context.getSharedPreferences( "csns",
+            Context.MODE_PRIVATE ).edit();
+        editor.remove( "user.access.key" );
+        editor.remove( "user.first.name" );
+        editor.remove( "user.last.name" );
+        editor.remove( "user.username" );
+        editor.commit();
+    }
+
     private void fromPreferences()
     {
         SharedPreferences preferences = context.getSharedPreferences( "csns",

@@ -69,7 +69,7 @@ public class NewsListFragment extends ListFragment {
             && savedInstanceState.containsKey( "activatedPosition" ) )
             activatedPosition = savedInstanceState.getInt( "activatedPosition" );
 
-        (new GetNewsTask()).execute();
+        loadNews( false );
     }
 
     /*
@@ -101,12 +101,18 @@ public class NewsListFragment extends ListFragment {
         callbacks.onItemSelected( position );
     }
 
-    private class GetNewsTask extends AsyncTask<Void, Void, Boolean> {
+    public void loadNews( boolean forceUpdate )
+    {
+        (new GetNewsTask()).execute( forceUpdate );
+    }
+
+    private class GetNewsTask extends AsyncTask<Boolean, Void, Boolean> {
 
         @Override
-        protected Boolean doInBackground( Void... params )
+        protected Boolean doInBackground( Boolean... params )
         {
-            return NewsData.getInstance( getActivity() ).update();
+            boolean forceUpdate = params.length > 0 ? params[0] : false;
+            return NewsData.getInstance( getActivity() ).update( forceUpdate );
         }
 
         @Override
@@ -127,6 +133,7 @@ public class NewsListFragment extends ListFragment {
                         activatedPosition = 0;
 
                     getListView().setItemChecked( activatedPosition, true );
+                    callbacks.onDataLoaded( activatedPosition );
                 }
             }
         }
@@ -141,9 +148,9 @@ public class NewsListFragment extends ListFragment {
 
     public interface Callbacks {
 
-        public void onDataLoaded();
+        public void onDataLoaded( int initialPosition );
 
-        public void onItemSelected( int newsIndex );
+        public void onItemSelected( int position );
 
         public boolean isTwoPane();
 
@@ -152,12 +159,12 @@ public class NewsListFragment extends ListFragment {
     private static Callbacks dummyCallbacks = new Callbacks() {
 
         @Override
-        public void onDataLoaded()
+        public void onDataLoaded( int initialPosition )
         {
         }
 
         @Override
-        public void onItemSelected( int newsIndex )
+        public void onItemSelected( int position )
         {
         }
 

@@ -33,7 +33,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -98,14 +97,6 @@ public class EntryActivity extends Activity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu( Menu menu )
-    {
-        super.onCreateOptionsMenu( menu );
-        getMenuInflater().inflate( R.menu.main, menu );
-        return true;
-    }
-
     /**
      * Terminates the GetDepartmentsTask if the activity is destroyed (e.g. due
      * to device rotation). The LoginTask is OK as it doesn't rely on the
@@ -122,7 +113,8 @@ public class EntryActivity extends Activity {
 
     private void startDefaultActivity()
     {
-        startActivity( new Intent( this, NewsListActivity.class ) );
+        startActivity( new Intent( getApplicationContext(),
+            NewsListActivity.class ) );
 
         // Close this activity and remove it from the activity stack so
         // the user cannot get back to it by clicking the Back button.

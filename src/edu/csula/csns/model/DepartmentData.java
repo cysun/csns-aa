@@ -56,6 +56,18 @@ public class DepartmentData {
         if( department != null ) toPreferences();
     }
 
+    public void clear()
+    {
+        department = null;
+
+        SharedPreferences.Editor editor = context.getSharedPreferences( "csns",
+            Context.MODE_PRIVATE ).edit();
+        editor.remove( "department.id" );
+        editor.remove( "department.name" );
+        editor.remove( "department.abbreviation" );
+        editor.commit();
+    }
+
     private void fromPreferences()
     {
         SharedPreferences preferences = context.getSharedPreferences( "csns",

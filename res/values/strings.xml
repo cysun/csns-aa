@@ -12,6 +12,9 @@
     <string name="news_list_title">News</string>
     <string name="news_detail_title">News</string>
 
+    <string name="menu_refresh">Refresh</string>
+    <string name="menu_logout">Logout</string>
+
     <string name="toast_login_success">Login successful!</string>
     <string name="toast_login_failure">Login failed!</string>
 

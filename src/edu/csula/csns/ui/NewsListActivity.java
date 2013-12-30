@@ -19,11 +19,15 @@
 package edu.csula.csns.ui;
 
 import edu.csula.csns.R;
+import edu.csula.csns.model.DepartmentData;
+import edu.csula.csns.model.UserData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import android.view.MenuItem;
 
 public class NewsListActivity extends FragmentActivity implements
     NewsListFragment.Callbacks, ViewPager.OnPageChangeListener {
@@ -40,12 +44,13 @@ public class NewsListActivity extends FragmentActivity implements
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_news_list );
 
+        FragmentManager fm = getSupportFragmentManager();
+        listFragment = (NewsListFragment) fm.findFragmentById( R.id.fragment_news_list );
+
         if( findViewById( R.id.container2_news_detail ) != null )
         {
             isTwoPane = true;
 
-            FragmentManager fm = getSupportFragmentManager();
-            listFragment = (NewsListFragment) fm.findFragmentById( R.id.fragment_news_list );
             pagerFragment = (NewsPagerFragment) fm.findFragmentById( R.id.container2_news_detail );
             if( pagerFragment == null )
             {
@@ -57,25 +62,65 @@ public class NewsListActivity extends FragmentActivity implements
         }
     }
 
-    /* NewsListFragment.Callbacks */
-
     @Override
-    public void onDataLoaded()
+    public boolean onCreateOptionsMenu( Menu menu )
     {
-        pagerFragment.getViewPager().getAdapter().notifyDataSetChanged();
+        super.onCreateOptionsMenu( menu );
+        getMenuInflater().inflate( R.menu.news, menu );
+        return true;
     }
 
     @Override
-    public void onItemSelected( int newsIndex )
+    public boolean onPrepareOptionsMenu( Menu menu )
+    {
+        super.onPrepareOptionsMenu( menu );
+        if( UserData.getInstance( getApplicationContext() ).getUser() == null )
+            menu.findItem( R.id.menu_logout ).setVisible( false );
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected( MenuItem item )
+    {
+        switch( item.getItemId() )
+        {
+            case R.id.menu_refresh:
+                listFragment.loadNews( true );
+                return true;
+
+            case R.id.menu_logout:
+                DepartmentData.getInstance( getApplicationContext() ).clear();
+                UserData.getInstance( getApplicationContext() ).clear();
+                startActivity( new Intent( getApplicationContext(),
+                    EntryActivity.class ) );
+                finish();
+
+            default:
+                return super.onOptionsItemSelected( item );
+        }
+    }
+
+    /* NewsListFragment.Callbacks */
+
+    @Override
+    public void onDataLoaded( int initialPosition )
+    {
+        ViewPager viewPager = pagerFragment.getViewPager();
+        viewPager.getAdapter().notifyDataSetChanged();
+        viewPager.setCurrentItem( initialPosition, false );
+    }
+
+    @Override
+    public void onItemSelected( int position )
     {
         if( isTwoPane )
         {
-            pagerFragment.getViewPager().setCurrentItem( newsIndex, false );
+            pagerFragment.getViewPager().setCurrentItem( position, false );
         }
         else
         {
             Intent intent = new Intent( this, NewsDetailActivity.class );
-            intent.putExtra( "newsIndex", newsIndex );
+            intent.putExtra( "newsIndex", position );
             startActivity( intent );
         }
     }
